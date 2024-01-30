@@ -75,22 +75,6 @@ def poly_2(txt):   #frgh in ba ghabli ine ke in yeki voroodi ro be soorat e "a0 
 def display_poly_2(p):
     from numpy.polynomial import Polynomial
     return str(Polynomial(p))
-def equal_len_list(p,q):
-    p.reverse()
-    q.reverse()
-    i=0
-    len_p=len(p)
-    len_q=len(q)
-    while i<(len_p-len_q):
-        q.append(0)
-        i+=1
-    i=0
-    while i<(len_q-len_p):
-        p.append(0)
-        i+=1
-    p.reverse()
-    q.reverse()
-    return [p,q]
 def plus_2(p,q):
     p=poly_2(p)
     q=poly_2(q)
