@@ -1,0 +1,236 @@
+dar input karbar yek chand jomle'ie(be format: anx^n-+a(n-1)x^(n-1)-+...-+a1x-+a0) be ma midahad va az ma makhahad yek seri amal rooye an anjam dahim ke lazeme an dashtan bordar zarayeb e chand jomle'ie ast
+'''
+def poly(txt):
+    poly=[]  #naam e bordar e zarayeb dar tabe poly ast
+    power1=0  #dar halgheie ke bordar zarayeb ra az voroodi estekhraj mikonam dar har bar motoghayer e power tavan e x ra neshan midahad va motoghayer e power1 tevan e x dar jomle ye ghabli, ta motovajeh shavim ke chand ta sefr bayad beyn e zarayeb e do jomle ye motavali begozarim
+    if txt[0]=='-':  #motoghayer e a_sign alamat mosbat ya manfi boodan e zarib e x ra ba meghdarhaye True ya False namayesh midahad ke ingoone taieen mishavad
+        a_sign=False
+    else:
+        a_sign=True
+    while len(txt)!=0 and ( 'x' in txt ):  #dar har bar anjam shodan in halghe, az str viroodi, meghdar zarib e estekhraj shode, va alamat e mosbat yamanfi e baad az an ra hazf mikonim
+
+        i=txt.index('x')+2
+        power=''
+        while ( i<len(txt) ) and ( txt[i]!='+' and txt[i]!='-') and ( txt[i-1]!='+' and txt[i-1]!='-'):  # ba motoghayer e i rooye tavan e x rah miravimva yeki yeki argham an ra dar motoghayer be format str e power mirizim
+            power=power+txt[i]
+            i+=1
+        if power=='':
+            power=1
+        power=int(power)  # hala motoghayer e power be format e int dar amad
+
+        j=int(txt.index('x'))-1
+        a=''
+        while j>=0:  #ba motoghayer e j rooye zarib e x roo be aghab raah miravim va argham an ra be tartib e bar aks dar motoghayer e be format e str e a zakhire mikonim
+            a+=txt[j]
+            j-=1
+
+        if a!='':
+            a=float(a[::-1])  #tartib e argham dar a ba aks ast pas an ra dorost mikonim
+        else:  #agar zarib e x 1 ya -1 bashad an ra neminevisim pas motoghayer e a khali mimand
+            a=1
+
+        while power1-1>power:  #dar tozih e power1 goftam in baraye chye
+            poly.append(0)
+            power1-=1
+        power1=power
+
+        if a_sign==True:  #chon har bar bakhshi az txt ro paak mikonim alamamat e a ham paak mishe pas ghsabl az paak kardanesh alamat e zarib e badi ro dar motoghayer e a_sign zakhire mikonam va age manfi bood a ro gharine mikonim
+            poly.append(a)   # ezafe kardan zarib e list e bordar zarayb
+        else:
+            poly.append(-a)
+
+        if (i<len(txt) and txt[i]=='-') or (i-1<len(txt) and txt[i-1]=='-'):  #rikhtan alamat e zarib e jomle ye baadi dar motoghayer e a_sign be soorat e True ya False
+            a_sign=False
+        else:
+            a_sign=True
+
+        if i<len(txt) and ( txt[i]=='+' or txt[i]=='-' ) :  #txt ro hazf mikonim ta jaiee ke ghoftam
+            txt=txt[i+1:]
+        else:
+            txt=txt[i:]
+
+#baad az tamoom shadan e halghe, ya txt khali ast yadigar onsor e x dar an nist yani tanha anasori ke da txt momken ast baashand argham e a0 hastand be soorat e dast nakhorde
+    while power1>1:  #momken ast zarateb az yekjaiee be bad sefr bashand va dar txt neveshteh nashode bashand; pas khodemoon be andaze ye koochik tarin tavan beheshoon sefr ezaafe mikonim
+        poly.append(0)
+        power1-=1
+
+    if txt!='':  #peydaa kardan e a0
+        if a_sign==True:
+            poly.append(int(txt))
+        else:
+            poly.append(-int(txt))
+    else:  #agar sefr khali bood yani: a0 = 0
+        poly.append(0)
+    return poly'''
+def display_poly(p):  #bordar e zarayeb ra be soorat str moratab minevisad
+    i=0
+    txt=''
+    while i<len(p):
+        if p[i]==0:
+            i+=1
+            if i<len(p):
+                continue
+            else:
+                break
+        if p[i]==1:
+            a='+'
+        elif p[i]==-1:
+            a='-'
+        elif p[i]>0:
+            a='+'+str(p[i])
+        else:
+            a=str(p[i])
+        if i==len(p)-1:
+            txt+=a
+        elif i==len(p)-2:
+            txt+=a+'x'
+        else:
+            txt+=a+'x'+'^'+str(len(p)-i-1)
+        i+=1
+    txt=txt[1:]
+    if txt=='':
+        txt=p[0]
+    return txt
+def poly_amunt_list(p,x):  #tavabeiee ke akhareshoon kalameye list daran be jaye str e chand joomle'iee list e bordar e zarayebesh ro voroodi migiran
+    i=0
+    result=0
+    p.reverse()
+    while i<len(p):
+        result+=p[i]*(x**i)
+        i+=1
+    p.reverse()
+    return result
+def poly_amount(p,x):
+    p=poly(p)
+    return poly_amunt_list(p,x)
+def equal_len_list(p,q):
+    p.reverse()
+    q.reverse()
+    i=0
+    len_p=len(p)
+    len_q=len(q)
+    while i<(len_p-len_q):
+        q.append(0)
+        i+=1
+    i=0
+    while i<(len_q-len_p):
+        p.append(0)
+        i+=1
+    p.reverse()
+    q.reverse()
+    return [p,q]
+def plus_list(p,q):
+    i=0
+    result=[]
+    while i<len(p):
+        result.append(p[i]+q[i])
+        i+=1
+    return result
+def plus(p,q):
+    [p,q]=equal_len_list(poly(p),poly(q))
+    return display_poly(plus_list(p,q))
+def minus_list(p,q):
+    i = 0
+    result = []
+    while i < len(p):
+        result.append(p[i] - q[i])
+        i += 1
+    return result
+def minus(p,q):
+    [p, q] = equal_len_list(poly(p), poly(q))
+    return display_poly(minus_list(p,q))
+def times_list(p,q):
+    i=0
+    result1=[]
+    while i<len(p):
+        result=[]
+        j=0
+        while j<len(q):
+            result.append(p[i]*q[j])
+            j+=1
+        j=0
+        while j<len(p)-i-1:
+            result.append(0)
+            j+=1
+        [result,result1]=equal_len_list(result,result1)
+        result=plus_list(result,result1)
+        result1=result.copy()
+        i+=1
+    return result
+def times(p,q):
+    p=poly(p)
+    q=poly(q)
+    return display_poly(times_list(p,q))
+def divide(p,q):
+    p=poly(p)
+    q=poly(q)
+    result=[]
+    i=0
+    l=len(p)-len(q)
+    while i<=l:
+        result.append(0)
+        i+=1
+    i=0
+    while len(p)>=len(q) :
+        result[i]=((p[0])/(q[0]))
+        result1=result[i:].copy()
+        t=times_list(q,result1)
+        t.reverse()
+        [t,p]=equal_len_list(t,p)
+        t.reverse()
+        p=(minus_list(p,t))
+        p=p[1:]
+        i+=1
+    return display_poly(result)
+def derivative_list(p,n):
+    copy_of_p=p.copy()
+    i=0
+
+    while i<n:
+        j=0
+        result=[]
+        copy_of_p.reverse()
+        while j<len(copy_of_p):
+            result.append(j*copy_of_p[j])
+            j+=1
+        result.reverse()
+        result=result[:-1]
+        copy_of_p=result
+        i+=1
+    return result
+def derivative(p,n):
+    p=poly(p)
+    return poly_amunt_list(p,n)
+def integral(p,n):
+    p=poly(p)
+    i=0
+    while i<n:
+        j=0
+        p.reverse()
+        result=[0]
+        while j<len(p):
+            result.append(p[j]/(j+1))
+            j+=1
+        i+=1
+        result.reverse()
+        p=result
+    return display_poly(result)
+def root(p,guess):
+    p=poly(p)
+    i=0
+    p1=[]
+    while i<len(p):
+        if p[i]!=0:
+            p1.append(abs(p[i]))
+        i+=1
+    m=min(p1)
+    guess1=guess
+    i=0
+    while abs(poly_amunt_list(p,guess)) > m*10**(-15) :
+        if poly_amunt_list(derivative_list(p,1),guess)==0 :
+            return "your guess isn't good enough"
+        guess1=guess - (  poly_amunt_list(p,guess) / poly_amunt_list(derivative_list(p,1),guess)  )
+        guess=guess1
+        i+=1
+
+    return guess
