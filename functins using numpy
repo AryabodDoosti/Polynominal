@@ -1,0 +1,125 @@
+def poly_2(txt):   #frgh in ba ghabli ine ke in yeki voroodi ro be soorat e "a0 -+ a1 x -+ a2 x**2 -+ ... -+ an x**n" migire chon tavabe e numpy injoori kar mikardan
+    poly=[]
+    a=''
+    if txt[0]=='-':
+        a_sign=False
+    else:
+        a_sign=True
+    i=0
+    if txt[0]=='-':
+        i=1
+    while txt[i]!='+' and txt[i]!='-':
+        a+=txt[i]
+        i+=1
+    if not('x' in a):
+        a=float(a)
+        if not a_sign:
+            a=-a
+        poly.append(float(a))
+        if txt[i]=='-':
+            a_sign=False
+        else:
+            a_sign=True
+        txt=txt[i+1:]
+    else:
+        poly.append(0)
+    a=''
+    if 'x' in txt:
+        if txt.index('x')+1==len(txt) or txt.index('x')+2!='*':
+            i=0
+            while txt[i]!='x':
+                a+=txt[i]
+                i+=1
+            if a=='' or a==' ':
+                a=1
+            a=float(a)
+            if not a_sign:
+                a=-a
+            poly.append(a)
+            if i+2<len(txt) and txt[i+2]=='-':
+                a_sign=False
+            else:
+                a_sign=True
+            txt=txt[i+3:]
+    power1=len(poly)-1
+    while len(txt)!=0 :
+        a=''
+        power=''
+        i=txt.index('x') + 3
+        while i<len(txt) and ( txt[i]!='+' and txt[i]!='-' ):
+            power+=txt[i]
+            i+=1
+        power=int(power)
+        while power1+1<power:
+            poly.append(0)
+            power1+=1
+        power1=power
+        if txt.index('x')-2<0:
+            a=1
+        else:
+            j=txt.index('x')-2
+            while j>=0:
+                a+=txt[j]
+                j-=1
+            a=a[::-1]
+            a=float(a)
+        if not a_sign:
+            a=-a
+        poly.append(a)
+        if i<len(txt) and txt[i]=='-':
+            a_sign=False
+        else:
+            a_sign=True
+        txt=txt[i+1:]
+    return poly
+def display_poly_2(p):
+    from numpy.polynomial import Polynomial
+    return str(Polynomial(p))
+def equal_len_list(p,q):
+    p.reverse()
+    q.reverse()
+    i=0
+    len_p=len(p)
+    len_q=len(q)
+    while i<(len_p-len_q):
+        q.append(0)
+        i+=1
+    i=0
+    while i<(len_q-len_p):
+        p.append(0)
+        i+=1
+    p.reverse()
+    q.reverse()
+    return [p,q]
+def plus_2(p,q):
+    p=poly_2(p)
+    q=poly_2(q)
+    from numpy.polynomial import polynomial as P
+    temp = P.polyadd(p,q)
+    temp = display_poly_2(temp)
+    return temp
+def minus_2(p,q):
+    p=poly_2(p)
+    q=poly_2(q)
+    i=0
+    while i<len(q):
+        q[i]=-q[i]
+        i+=1
+    from numpy.polynomial import polynomial as P
+    temp = P.polyadd(p,q)
+    temp = display_poly_2(temp)
+    return temp
+def times_2(p,q):
+    p=poly_2(p)
+    q=poly_2(q)
+    p.reverse()
+    q.reverse()
+    import numpy
+    t=numpy.polynomial.polynomial.polymul(p,q)
+    p.reverse()
+    q.reverse()
+    return t
+def root_2(p):
+    p=poly_2(p)
+    import numpy.polynomial
+    return np.roots(p)
